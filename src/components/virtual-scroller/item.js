@@ -1,6 +1,6 @@
 import { useSize } from "ahooks";
 import styles from './item.module.css';
-import { memo, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 function Item(props) {
     const {
@@ -14,8 +14,11 @@ function Item(props) {
     const size = useSize(ref);
 
     useEffect(() => {
-        onSizeChange(idx, size);
-    }, [size, idx]);
+        if (size && size.height) {
+            console.log('!!!!', idx, size);
+            onSizeChange(idx, size);
+        }
+    }, [size]);
 
     return (
         <div ref={ref} className={styles.item} style={{transform: `translateY(${position}px)`,}}>
@@ -24,5 +27,5 @@ function Item(props) {
     );
   }
   
-  export default memo(Item);
+  export default Item;
   

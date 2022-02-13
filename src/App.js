@@ -3,15 +3,32 @@ import { useState } from 'react';
 import VirtualScroller from './components/virtual-scroller';
 
 const mockImgs = [
-  'https://dummyimage.com/390x400/000/fff',
-  'https://dummyimage.com/390x300/999/fff',
-  'https://dummyimage.com/390x200/666/fff'
+  'https://dummyimage.com/390x400/000/fff&text=NO.0',
+  'https://dummyimage.com/390x300/999/fff&text=NO.1',
+  'https://dummyimage.com/390x200/666/fff&text=NO.2',
+  'https://dummyimage.com/390x400/000/fff&text=NO.3',
+  'https://dummyimage.com/390x300/999/fff&text=NO.4',
+  'https://dummyimage.com/390x200/666/fff&text=NO.5',
+  'https://dummyimage.com/390x400/000/fff&text=NO.6',
+  'https://dummyimage.com/390x300/999/fff&text=NO.7',
+  'https://dummyimage.com/390x200/666/fff&text=NO.8',
+  'https://dummyimage.com/390x400/000/fff&text=NO.9',
+  'https://dummyimage.com/390x300/999/fff&text=NO.10',
+  'https://dummyimage.com/390x200/666/fff&text=NO.11',
+  'https://dummyimage.com/390x400/000/fff&text=NO.12',
+  'https://dummyimage.com/390x300/999/fff&text=NO.13',
+  'https://dummyimage.com/390x200/666/fff&text=NO.14',
+  'https://dummyimage.com/390x400/000/fff&text=NO.15',
+  'https://dummyimage.com/390x300/999/fff&text=NO.16',
+  'https://dummyimage.com/390x200/666/fff&text=NO.17',
+  'https://dummyimage.com/390x400/000/fff&text=NO.18',
+  'https://dummyimage.com/390x300/999/fff&text=NO.19',
 ];
 
 function createDataSource(prev = 0) {
-  return Array.from({ length: 30 }).map((item, index) => ({
+  return Array.from({ length: 20 }).map((item, index) => ({
     id: prev + index,
-    imgUrl: mockImgs[Math.floor(Math.random() * 100 % 3)],
+    imgUrl: mockImgs[prev + index],
   }));
 }
 

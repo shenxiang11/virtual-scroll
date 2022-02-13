@@ -61,8 +61,9 @@ function VirtualScroller(props) {
     }, [itemsWithSize, minItemSize]);
 
     const handleSizeChange = (idx, size) => {
-        if (size) {
+        if (size && size.height) {
             const newData = {...sizeData, [idx]: size.height};
+            console.log('-----', sizeData, idx, size.height)
             setSizeData(newData);
         }       
     };
@@ -148,7 +149,7 @@ function VirtualScroller(props) {
             pool.push(view);
         }
         setPool(pool);
-        console.log(startIndex, endIndex, itemsWithSize);
+        // console.log(startIndex, endIndex, sizeData, pool);
         // console.log(pool, startIndex, endIndex, sizes, itemsWithSize);
     }
 
@@ -166,20 +167,25 @@ function VirtualScroller(props) {
     }, [sizes]);
     
     return (
-      <div className={styles.scroller} ref={el} onScroll={onScroll}>
-          <div className={styles.list} style={{height: totalSize}}>
-            {
-                pool.map((item, idx) => (
-                    <Item position={item.position} key={item.item[itemKey]} idx={idx} onSizeChange={handleSizeChange}>
-                        {
-                            itemRender(item.item, idx)
-                        }
-                    </Item>
-                ))
-            }
-          </div>
-          
-      </div>
+        <>
+            <div className={styles.debugger}>
+                {JSON.stringify(sizeData, 2)}
+            </div>
+            <div className={styles.scroller} ref={el} onScroll={onScroll}>
+                <div className={styles.list} style={{height: totalSize}}>
+                    {
+                        pool.map((item, idx) => (
+                            <Item position={item.position} key={item.id} idx={idx} onSizeChange={handleSizeChange}>
+                                {
+                                    itemRender(item.item, idx)
+                                }
+                            </Item>
+                        ))
+                    }
+                </div>
+                
+            </div>
+        </>
     );
   }
   
