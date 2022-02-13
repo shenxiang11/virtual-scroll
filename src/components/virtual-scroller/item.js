@@ -15,7 +15,6 @@ function Item(props) {
 
     useEffect(() => {
         if (size && size.height) {
-            console.log('!!!!', idx, size);
             onSizeChange(idx, size);
         }
     }, [size]);

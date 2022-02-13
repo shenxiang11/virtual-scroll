@@ -1,16 +1,14 @@
 import styles from './index.module.css';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Item from './item';
-import { throttle } from 'lodash-es';
-
-const BUFFER = 200; // 上下滚动偏移
 
 function VirtualScroller(props) {
     const {
+        debuggerMode = false,
         dataSource = [],
         itemRender = () => {},
-        minItemSize = 10,
-        itemKey="id",
+        minItemSize = 300,
+        buffer = minItemSize * 3,
     } = props;
 
     const [totalSize, setTotalSize] = useState(0);
@@ -63,7 +61,6 @@ function VirtualScroller(props) {
     const handleSizeChange = (idx, size) => {
         if (size && size.height) {
             const newData = {...sizeData, [idx]: size.height};
-            console.log('-----', sizeData, idx, size.height)
             setSizeData(newData);
         }       
     };
@@ -88,25 +85,12 @@ function VirtualScroller(props) {
         const count = items.length;
         const pool = [];
         const scroll = getScroll(event ? event : scrollEvent);
-        scroll.start -= BUFFER;
-        scroll.end += BUFFER;
+        scroll.start -= buffer;
+        scroll.end += buffer;
 
         let startIndex;
         let endIndex;
         // 二分法：根据对应元素的位置查找当前需要展示的开始、结束index
-        let left = 0;
-        let right = count - 1;
-
-        // console.log(scroll);
-        // while (left < right) {
-        //     let mid = Math.floor(left + (right - left) / 2);
-        //     let h = sizes[mid].accumulator;
-        //     if (h < scroll.start) {
-        //         left++;
-        //     } else if (h > scroll.start) {
-        //         right--;
-        //     }
-        // }
         let h;
         let a = 0;
         let b = count - 1;
@@ -144,13 +128,12 @@ function VirtualScroller(props) {
             let item = items[index];
             let view = {
                 ...item,
+                index,
                 position: sizes[index-1].accumulator,
             }
             pool.push(view);
         }
         setPool(pool);
-        // console.log(startIndex, endIndex, sizeData, pool);
-        // console.log(pool, startIndex, endIndex, sizes, itemsWithSize);
     }
 
     const onScroll = (event) => {
@@ -168,14 +151,18 @@ function VirtualScroller(props) {
     
     return (
         <>
-            <div className={styles.debugger}>
-                {JSON.stringify(sizeData, 2)}
-            </div>
+            {
+                debuggerMode ? (
+                    <div className={styles.debugger}>
+                        {JSON.stringify(sizeData, 2)}
+                    </div>
+                ) : null
+            }
             <div className={styles.scroller} ref={el} onScroll={onScroll}>
                 <div className={styles.list} style={{height: totalSize}}>
                     {
                         pool.map((item, idx) => (
-                            <Item position={item.position} key={item.id} idx={idx} onSizeChange={handleSizeChange}>
+                            <Item position={item.position} key={item.id} idx={item.index} onSizeChange={handleSizeChange}>
                                 {
                                     itemRender(item.item, idx)
                                 }

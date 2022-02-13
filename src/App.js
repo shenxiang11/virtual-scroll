@@ -26,9 +26,9 @@ const mockImgs = [
 ];
 
 function createDataSource(prev = 0) {
-  return Array.from({ length: 20 }).map((item, index) => ({
+  return Array.from({ length: 40 }).map((item, index) => ({
     id: prev + index,
-    imgUrl: mockImgs[prev + index],
+    imgUrl: mockImgs[(prev + index)%20],
   }));
 }
 
@@ -42,7 +42,6 @@ function App() {
       <div className="app-main">
         <VirtualScroller
           dataSource={dataSource}
-          itemKey="id"
           itemRender={(item, idx) => {
             return <img style={{width: '100%'}} src={item.imgUrl} alt="" />
           }}
